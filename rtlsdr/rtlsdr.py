@@ -478,3 +478,84 @@ class RtlSdr(BaseRtlSdr):
                           % (result))
 
         self.read_async_canceling = True
+
+
+    def read_offset_I(self, num_bytes=DEFAULT_READ_SIZE):
+        ''' Reads arithmetic sum of num_bytes/2 I samples
+        '''
+        # FIXME: libsdrrtl may not be able to read an arbitrary number of bytes
+
+        num_bytes = int(num_bytes)
+
+        # create buffer, as necessary
+        if len(self.buffer) != num_bytes:
+            array_type = (c_ubyte*num_bytes)
+            self.buffer = array_type()
+
+        result = librtlsdr.rtlsdr_read_offset_I(self.dev_p, self.buffer, num_bytes,\
+                                            byref(self.num_bytes_read))
+        if result < 0:
+            self.close()
+            raise IOError('Error code %d when reading %d bytes'\
+                          % (result, num_bytes))
+
+        if self.num_bytes_read.value != num_bytes:
+            self.close()
+            raise IOError('Short read, requested %d bytes, received %d'\
+                          % (num_bytes, self.num_bytes_read.value))
+
+        return result
+
+    def read_offset_Q(self, num_bytes=DEFAULT_READ_SIZE):
+        ''' Reads arithmetic sum of num_bytes/2 Q samples
+        '''
+        # FIXME: libsdrrtl may not be able to read an arbitrary number of bytes
+
+        num_bytes = int(num_bytes)
+
+        # create buffer, as necessary
+        if len(self.buffer) != num_bytes:
+            array_type = (c_ubyte*num_bytes)
+            self.buffer = array_type()
+
+        result = librtlsdr.rtlsdr_read_offset_I(self.dev_p, self.buffer, num_bytes,\
+                                            byref(self.num_bytes_read))
+        if result < 0:
+            self.close()
+            raise IOError('Error code %d when reading %d bytes'\
+                          % (result, num_bytes))
+
+        if self.num_bytes_read.value != num_bytes:
+            self.close()
+            raise IOError('Short read, requested %d bytes, received %d'\
+                          % (num_bytes, self.num_bytes_read.value))
+
+        return result
+
+    def read_power_dB(self, num_bytes=DEFAULT_READ_SIZE):
+        ''' Reads arithmetic sum of square of num_bytes samples divided by
+        number of samples, and returned in dB.
+        '''
+        # FIXME: libsdrrtl may not be able to read an arbitrary number of bytes
+
+        num_bytes = int(num_bytes)
+
+        # create buffer, as necessary
+        if len(self.buffer) != num_bytes:
+            array_type = (c_ubyte*num_bytes)
+            self.buffer = array_type()
+
+        result = librtlsdr.rtlsdr_read_power_dB(self.dev_p, self.buffer, num_bytes,\
+                                            byref(self.num_bytes_read))
+        if result < 0:
+            self.close()
+            raise IOError('Error code %d when reading %d bytes'\
+                          % (result, num_bytes))
+
+        if self.num_bytes_read.value != num_bytes:
+            self.close()
+            raise IOError('Short read, requested %d bytes, received %d'\
+                          % (num_bytes, self.num_bytes_read.value))
+
+        return result
+

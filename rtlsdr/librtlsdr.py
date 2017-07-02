@@ -48,13 +48,13 @@ p_rtlsdr_dev = c_void_p
 # typedef void(*rtlsdr_read_async_cb_t)(unsigned char *buf, uint32_t len, void *ctx);
 rtlsdr_read_async_cb_t = CFUNCTYPE(None, POINTER(c_ubyte), c_int, py_object)
 
-# uint32_t rtlsdr_get_device_count(void);
-f = librtlsdr.rtlsdr_get_device_count
-f.restype, f.argtypes = c_uint, []
-
 # const char* rtlsdr_get_device_name(uint32_t index);
 f = librtlsdr.rtlsdr_get_device_name
 f.restype, f.argtypes = c_char_p, [c_uint]
+
+# uint32_t rtlsdr_get_device_count(void);
+f = librtlsdr.rtlsdr_get_device_count
+f.restype, f.argtypes = c_uint, []
 
 # int rtlsdr_get_device_usb_strings(uint32_t index, char *manufact,
 #                                   char *product, char *serial)
@@ -147,6 +147,18 @@ f.restype, f.argtypes = c_int, [p_rtlsdr_dev]
 
 # int rtlsdr_read_sync(rtlsdr_dev_t *dev, void *buf, int len, int *n_read);
 f = librtlsdr.rtlsdr_read_sync
+f.restype, f.argtypes = c_int, [p_rtlsdr_dev, c_void_p, c_int, POINTER(c_int)]
+
+# int rtlsdr_read_power_dB(rtlsdr_dev_t *dev, void *buf, int len, int *n_read);
+f = librtlsdr.rtlsdr_read_power_dB
+f.restype, f.argtypes = c_int, [p_rtlsdr_dev, c_void_p, c_int, POINTER(c_int)]
+
+# int rtlsdr_read_offset_I(rtlsdr_dev_t *dev, void *buf, int len, int *n_read);
+f = librtlsdr.rtlsdr_read_offset_I
+f.restype, f.argtypes = c_int, [p_rtlsdr_dev, c_void_p, c_int, POINTER(c_int)]
+
+# int rtlsdr_read_offset_Q(rtlsdr_dev_t *dev, void *buf, int len, int *n_read);
+f = librtlsdr.rtlsdr_read_offset_Q
 f.restype, f.argtypes = c_int, [p_rtlsdr_dev, c_void_p, c_int, POINTER(c_int)]
 
 # int rtlsdr_wait_async(rtlsdr_dev_t *dev, rtlsdr_read_async_cb_t cb, void *ctx);
